@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignIn_Activity extends AppCompatActivity {
 
     TextInputLayout t1,t2;
+    TextView textView;
     ProgressBar bar;
     FirebaseAuth mAuth;
 
@@ -32,6 +34,15 @@ public class SignIn_Activity extends AppCompatActivity {
         t1 = (TextInputLayout) findViewById(R.id.email);
         t2 = (TextInputLayout) findViewById(R.id.password);
         bar = (ProgressBar) findViewById(R.id.progressBar2);
+        textView = (TextView) findViewById(R.id.forgotPassword);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignIn_Activity.this,Forgot_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void signInHere(View view) {
