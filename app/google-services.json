@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "339607913875",
+    "project_id": "myreadingzone",
+    "storage_bucket": "myreadingzone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339607913875:android:a9d2777d580edcc43f5466",
+        "android_client_info": {
+          "package_name": "eu.tutorials.myreadingzone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339607913875-9ce5nmg86soqqg1r0m3i2fkpbn6navr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEY0uINRTtLidUIgRGN9-avjLL2C3Wu9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339607913875-9ce5nmg86soqqg1r0m3i2fkpbn6navr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
