@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignIn_Activity extends AppCompatActivity {
 
     TextInputLayout t1,t2;
-    TextView textView;
+    TextView textView, textView2;
     ProgressBar bar;
     FirebaseAuth mAuth;
 
@@ -31,10 +31,19 @@ public class SignIn_Activity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        textView2 = (TextView) findViewById(R.id.alreadyAccountSignIn);
         t1 = (TextInputLayout) findViewById(R.id.email);
         t2 = (TextInputLayout) findViewById(R.id.password);
         bar = (ProgressBar) findViewById(R.id.progressBar2);
         textView = (TextView) findViewById(R.id.forgotPassword);
+
+        textView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignIn_Activity.this,SignUp_Activity.class);
+                startActivity(intent);
+            }
+        });
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +86,8 @@ public class SignIn_Activity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
+                            t1.getEditText().setText("");
+                            t2.getEditText().setText("");
                             bar.setVisibility(View.INVISIBLE);
                             t1.clearFocus();
                             t2.clearFocus();

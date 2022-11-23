@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignUp_Activity extends AppCompatActivity {
     TextInputLayout t1,t2,t3;
     ProgressBar bar;
-    TextView textView;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -32,19 +32,12 @@ public class SignUp_Activity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        textView = (TextView) findViewById(R.id.alreadyAccountSignIn);
+
         t1= (TextInputLayout) findViewById(R.id.regEmail);
         t2= (TextInputLayout) findViewById(R.id.regPassword);
         t3= (TextInputLayout) findViewById(R.id.conformPassword);
         bar= (ProgressBar) findViewById(R.id.progressBar);
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUp_Activity.this,SignIn_Activity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void signUpHere(View view) {
