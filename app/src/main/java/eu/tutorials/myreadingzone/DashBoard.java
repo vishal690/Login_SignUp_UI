@@ -33,5 +33,6 @@ public class DashBoard extends AppCompatActivity {
     public void logOutHere(View view) {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(DashBoard.this,MainActivity.class));
+        finish();
     }
 }
