@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "339607913875-h5l8t2pthngmsg4ll04r9qo7jk04li8k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.tutorials.myreadingzone",
+            "certificate_hash": "12d67d52d4537ddff9afa8b56b50cdf034876b29"
+          }
+        },
+        {
           "client_id": "339607913875-9ce5nmg86soqqg1r0m3i2fkpbn6navr0.apps.googleusercontent.com",
           "client_type": 3
         }
