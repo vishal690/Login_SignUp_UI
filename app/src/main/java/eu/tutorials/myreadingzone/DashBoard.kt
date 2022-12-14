@@ -1,68 +1,61 @@
-package eu.tutorials.myreadingzone;
+package eu.tutorials.myreadingzone
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
+import android.widget.ProgressBar
+import android.os.Bundle
+import eu.tutorials.myreadingzone.R
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import android.content.Intent
+import android.graphics.Color
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import eu.tutorials.myreadingzone.MainActivity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+class DashBoard : AppCompatActivity() {
+    var uid: TextView? = null
+    var email: TextView? = null
+    var name: TextView? = null
+    var gEmail: TextView? = null
+    var bar: ProgressBar? = null
+    var btn: Button? = null
+    var img: ImageView? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_dash_board)
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.FirebaseAuth;
-
-public class DashBoard extends AppCompatActivity {
-    TextView uid, email,name,gEmail;
-    ProgressBar bar;
-    Button btn;
-    ImageView img;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dash_board);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        email = (TextView) findViewById(R.id.viewEmail);
-        uid = (TextView) findViewById(R.id.viewUid);
-        name = (TextView) findViewById(R.id.name);
-        gEmail = (TextView) findViewById(R.id.gEmail);
-        btn = (Button) findViewById(R.id.logOutBtn);
-        img = (ImageView) findViewById(R.id.imageView3);
-
-
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if( account != null){
-            name.setVisibility(View.VISIBLE);
-            gEmail.setVisibility(View.VISIBLE);
-            img.setVisibility(View.VISIBLE);
-            name.setText(account.getDisplayName());
-            gEmail.setText(account.getEmail());
-            Glide.with(this).load(account.getPhotoUrl()).into(img);
-        }else {
-            email.setVisibility(View.VISIBLE);
-            uid.setVisibility(View.VISIBLE);
-            email.setText("Email :- "+getIntent().getStringExtra("email").toString());
-            uid.setText("UID :- "+getIntent().getStringExtra("Uid").toString());
-
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        supportActionBar!!.hide()
+        window.statusBarColor = Color.TRANSPARENT
+        email = findViewById<View>(R.id.viewEmail) as TextView
+        uid = findViewById<View>(R.id.viewUid) as TextView
+        name = findViewById<View>(R.id.name) as TextView
+        gEmail = findViewById<View>(R.id.gEmail) as TextView
+        btn = findViewById<View>(R.id.logOutBtn) as Button
+        img = findViewById<View>(R.id.imageView3) as ImageView
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            name!!.visibility = View.VISIBLE
+            gEmail!!.visibility = View.VISIBLE
+            img!!.visibility = View.VISIBLE
+            name!!.text = account.displayName
+            gEmail!!.text = account.email
+            Glide.with(this).load(account.photoUrl).into(img!!)
+        } else {
+            email!!.visibility = View.VISIBLE
+            uid!!.visibility = View.VISIBLE
+            email!!.text = "Email :- " + intent.getStringExtra("email").toString()
+            uid!!.text = "UID :- " + intent.getStringExtra("Uid").toString()
         }
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(DashBoard.this,MainActivity.class));
-                finish();
-            }
-        });
+        btn!!.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this@DashBoard, MainActivity::class.java))
+            finish()
+        }
     }
-
 }

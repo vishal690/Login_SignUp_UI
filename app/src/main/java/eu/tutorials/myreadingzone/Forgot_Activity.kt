@@ -1,60 +1,51 @@
-package eu.tutorials.myreadingzone;
+package eu.tutorials.myreadingzone
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
+import android.widget.ProgressBar
+import com.google.firebase.auth.FirebaseAuth
+import android.os.Bundle
+import eu.tutorials.myreadingzone.R
+import com.google.android.gms.tasks.OnCompleteListener
+import android.widget.Toast
+import android.content.Intent
+import android.graphics.Color
+import android.view.View
+import eu.tutorials.myreadingzone.SignIn_Activity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-
-public class Forgot_Activity extends AppCompatActivity {
-    TextInputLayout t1;
-    ProgressBar bar;
-    private FirebaseAuth mAuth;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        t1 = (TextInputLayout) findViewById(R.id.forgotEmail);
-        bar = (ProgressBar) findViewById(R.id.progressBar4);
+class Forgot_Activity : AppCompatActivity() {
+    var t1: TextInputLayout? = null
+    var bar: ProgressBar? = null
+    private var mAuth: FirebaseAuth? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_forgot)
+        supportActionBar!!.hide()
+        window.statusBarColor = Color.TRANSPARENT
+        //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        t1 = findViewById<View>(R.id.forgotEmail) as TextInputLayout
+        bar = findViewById<View>(R.id.progressBar4) as ProgressBar
     }
 
-    public void resetPassword(View view) {
-        bar.setVisibility(View.VISIBLE);
-        String forgotEmail = t1.getEditText().getText().toString().trim();
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.sendPasswordResetEmail(forgotEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if(task.isSuccessful())
-                {
-                    bar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(), "Password reset link send on registered Email", Toast.LENGTH_SHORT).show();
-                    Intent intent =new Intent(Forgot_Activity.this,SignIn_Activity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-                    bar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
-
-                }
+    fun resetPassword(view: View?) {
+        bar!!.visibility = View.VISIBLE
+        val forgotEmail = t1!!.editText!!.text.toString().trim { it <= ' ' }
+        mAuth = FirebaseAuth.getInstance()
+        mAuth!!.sendPasswordResetEmail(forgotEmail).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                bar!!.visibility = View.INVISIBLE
+                Toast.makeText(
+                    applicationContext,
+                    "Password reset link send on registered Email",
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent = Intent(this@Forgot_Activity, SignIn_Activity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                bar!!.visibility = View.INVISIBLE
+                Toast.makeText(applicationContext, "Invalid Email", Toast.LENGTH_SHORT).show()
             }
-        });
+        }
     }
-
 }

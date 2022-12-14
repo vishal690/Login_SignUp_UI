@@ -1,30 +1,31 @@
-package eu.tutorials.myreadingzone;
+package eu.tutorials.myreadingzone
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import eu.tutorials.myreadingzone.R
+import android.content.Intent
+import android.graphics.Color
+import android.view.View
+import android.widget.Button
+import eu.tutorials.myreadingzone.SignIn_Activity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-
-public class MainActivity extends AppCompatActivity {
-    Button btn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        btn= (Button) findViewById(R.id.button);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,SignIn_Activity.class));
-            }
-        });
+class MainActivity : AppCompatActivity() {
+    var btn: Button? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        supportActionBar!!.hide()
+        window.statusBarColor = Color.TRANSPARENT
+        btn = findViewById<View>(R.id.button) as Button
+        btn!!.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@MainActivity,
+                    SignIn_Activity::class.java
+                )
+            )
+        }
     }
 }

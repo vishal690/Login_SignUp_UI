@@ -1,117 +1,102 @@
-package eu.tutorials.myreadingzone;
+package eu.tutorials.myreadingzone
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
+import android.widget.ProgressBar
+import com.google.firebase.auth.FirebaseAuth
+import android.os.Bundle
+import android.util.Patterns
+import android.view.View
+import eu.tutorials.myreadingzone.R
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthResult
+import android.widget.Toast
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+class SignUp_Activity : AppCompatActivity() {
+    var t1: TextInputLayout? = null
+    var t2: TextInputLayout? = null
+    var t3: TextInputLayout? = null
+    var bar: ProgressBar? = null
+    private var mAuth: FirebaseAuth? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_sign_up)
+        supportActionBar!!.hide()
+        window.statusBarColor = Color.TRANSPARENT
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
-public class SignUp_Activity extends AppCompatActivity {
-    TextInputLayout t1,t2,t3;
-    ProgressBar bar;
-
-    private FirebaseAuth mAuth;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
-        t1= (TextInputLayout) findViewById(R.id.regEmail);
-        t2= (TextInputLayout) findViewById(R.id.regPassword);
-        t3= (TextInputLayout) findViewById(R.id.conformPassword);
-        bar= (ProgressBar) findViewById(R.id.progressBar);
-
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        t1 = findViewById<View>(R.id.regEmail) as TextInputLayout
+        t2 = findViewById<View>(R.id.regPassword) as TextInputLayout
+        t3 = findViewById<View>(R.id.conformPassword) as TextInputLayout
+        bar = findViewById<View>(R.id.progressBar) as ProgressBar
     }
 
-    public void signUpHere(View view) {
-        bar.setVisibility(View.VISIBLE);
-        String email = t1.getEditText().getText().toString().trim();
-        String pass = t2.getEditText().getText().toString().trim();
-        String cnfmPass = t3.getEditText().getText().toString().trim();
-
+    fun signUpHere(view: View?) {
+        bar!!.visibility = View.VISIBLE
+        val email = t1!!.editText!!.text.toString().trim { it <= ' ' }
+        val pass = t2!!.editText!!.text.toString().trim { it <= ' ' }
+        val cnfmPass = t3!!.editText!!.text.toString().trim { it <= ' ' }
         if (email.isEmpty()) {
-            bar.setVisibility(View.INVISIBLE);
-            t1.setError("Enter an email address");
-            t1.requestFocus();
-            return;
+            bar!!.visibility = View.INVISIBLE
+            t1!!.error = "Enter an email address"
+            t1!!.requestFocus()
+            return
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            bar.setVisibility(View.INVISIBLE);
-            t1.setError("Enter a valid email address");
-            t1.requestFocus();
-            return;
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            bar!!.visibility = View.INVISIBLE
+            t1!!.error = "Enter a valid email address"
+            t1!!.requestFocus()
+            return
         }
         if (pass.isEmpty()) {
-            bar.setVisibility(View.INVISIBLE);
-            t2.setError("Enter a password");
-            t2.requestFocus();
-            return;
+            bar!!.visibility = View.INVISIBLE
+            t2!!.error = "Enter a password"
+            t2!!.requestFocus()
+            return
         }
-        if (pass.length() < 8) {
-            bar.setVisibility(View.INVISIBLE);
-            t2.setError("Password Length Must be 8 Digits");
-            t2.requestFocus();
-            return;
+        if (pass.length < 8) {
+            bar!!.visibility = View.INVISIBLE
+            t2!!.error = "Password Length Must be 8 Digits"
+            t2!!.requestFocus()
+            return
         }
-        if (!cnfmPass.equals(pass)) {
-            bar.setVisibility(View.INVISIBLE);
-            t3.setError("Password do not match");
-            t3.requestFocus();
-            return;
+        if (cnfmPass != pass) {
+            bar!!.visibility = View.INVISIBLE
+            t3!!.error = "Password do not match"
+            t3!!.requestFocus()
+            return
         }
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.createUserWithEmailAndPassword(email,pass)
-                .addOnCompleteListener(SignUp_Activity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            bar.setVisibility(View.INVISIBLE);
-                            t1.getEditText().setText("");
-                            t2.getEditText().setText("");
-                            t3.getEditText().setText("");
-                            t1.setError("");
-                            t2.setError("");
-                            t3.setError("");
-                            t1.clearFocus();
-                            t2.clearFocus();
-                            t3.clearFocus();
-                            Toast.makeText(getApplicationContext(), "SignUp Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            bar.setVisibility(View.INVISIBLE);
-                            t1.getEditText().setText("");
-                            t2.getEditText().setText("");
-                            t3.getEditText().setText("");
-                            t1.setError("");
-                            t2.setError("");
-                            t3.setError("");
-                            t1.clearFocus();
-                            t2.clearFocus();
-                            t3.clearFocus();
-                            Toast.makeText(getApplicationContext(), "Process Error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        mAuth = FirebaseAuth.getInstance()
+        mAuth!!.createUserWithEmailAndPassword(email, pass)
+            .addOnCompleteListener(this@SignUp_Activity) { task ->
+                if (task.isSuccessful) {
+                    bar!!.visibility = View.INVISIBLE
+                    t1!!.editText!!.setText("")
+                    t2!!.editText!!.setText("")
+                    t3!!.editText!!.setText("")
+                    t1!!.error = ""
+                    t2!!.error = ""
+                    t3!!.error = ""
+                    t1!!.clearFocus()
+                    t2!!.clearFocus()
+                    t3!!.clearFocus()
+                    Toast.makeText(applicationContext, "SignUp Successfully", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    bar!!.visibility = View.INVISIBLE
+                    t1!!.editText!!.setText("")
+                    t2!!.editText!!.setText("")
+                    t3!!.editText!!.setText("")
+                    t1!!.error = ""
+                    t2!!.error = ""
+                    t3!!.error = ""
+                    t1!!.clearFocus()
+                    t2!!.clearFocus()
+                    t3!!.clearFocus()
+                    Toast.makeText(applicationContext, "Process Error", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

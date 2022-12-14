@@ -1,198 +1,168 @@
-package eu.tutorials.myreadingzone;
+package eu.tutorials.myreadingzone
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
+import android.widget.TextView
+import android.widget.ProgressBar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseUser
+import android.content.Intent
+import android.graphics.Color
+import eu.tutorials.myreadingzone.DashBoard
+import android.os.Bundle
+import android.util.Patterns
+import android.view.View
+import android.widget.ImageView
+import eu.tutorials.myreadingzone.R
+import eu.tutorials.myreadingzone.SignUp_Activity
+import eu.tutorials.myreadingzone.Forgot_Activity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthResult
+import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-
-public class SignIn_Activity extends AppCompatActivity {
-
-    TextInputLayout t1,t2;
-    TextView textView, textView2;
-    ProgressBar bar;
-    private FirebaseAuth mAuth;
-    ImageView gSignIn;
-    GoogleSignInClient mGoogleSignInClient;
-
-    @Override
-    public void onStart() {
-        super.onStart();
+class SignIn_Activity : AppCompatActivity() {
+    var t1: TextInputLayout? = null
+    var t2: TextInputLayout? = null
+    var textView: TextView? = null
+    var textView2: TextView? = null
+    var bar: ProgressBar? = null
+    private var mAuth: FirebaseAuth? = null
+    var gSignIn: ImageView? = null
+    var mGoogleSignInClient: GoogleSignInClient? = null
+    public override fun onStart() {
+        super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-       if(currentUser!=null)
-           startActivity(new Intent(getApplicationContext(),DashBoard.class));
+        val currentUser = mAuth!!.currentUser
+        if (currentUser != null) startActivity(Intent(applicationContext, DashBoard::class.java))
     }
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        textView2 = (TextView) findViewById(R.id.alreadyAccountSignIn);
-        t1 = (TextInputLayout) findViewById(R.id.email);
-        t2 = (TextInputLayout) findViewById(R.id.password);
-        bar = (ProgressBar) findViewById(R.id.progressBar2);
-        textView = (TextView) findViewById(R.id.forgotPassword);
-        gSignIn = (ImageView)  findViewById(R.id.imageView);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        gSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processLogin();
-            }
-        });
-
-        googleSignIn();
-
-        textView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignIn_Activity.this,SignUp_Activity.class);
-                startActivity(intent);
-            }
-        });
-
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignIn_Activity.this,Forgot_Activity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-
-
-
-    public void signInHere(View view) {
-        bar.setVisibility(View.VISIBLE);
-        String email = t1.getEditText().getText().toString().trim();
-        String password = t2.getEditText().getText().toString().trim();
-
-        if (email.isEmpty()) {
-            bar.setVisibility(View.INVISIBLE);
-            t1.setError("Enter an email address");
-            t1.requestFocus();
-            return;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_sign_in)
+        supportActionBar!!.hide()
+        window.statusBarColor = Color.TRANSPARENT
+        //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        textView2 = findViewById<View>(R.id.alreadyAccountSignIn) as TextView
+        t1 = findViewById<View>(R.id.email) as TextInputLayout
+        t2 = findViewById<View>(R.id.password) as TextInputLayout
+        bar = findViewById<View>(R.id.progressBar2) as ProgressBar
+        textView = findViewById<View>(R.id.forgotPassword) as TextView
+        gSignIn = findViewById<View>(R.id.imageView) as ImageView
+        mAuth = FirebaseAuth.getInstance()
+        gSignIn!!.setOnClickListener { processLogin() }
+        googleSignIn()
+        textView2!!.setOnClickListener {
+            val intent = Intent(this@SignIn_Activity, SignUp_Activity::class.java)
+            startActivity(intent)
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            bar.setVisibility(View.INVISIBLE);
-            t1.setError("Enter a valid email address");
-            t1.requestFocus();
-            return;
+        textView!!.setOnClickListener {
+            val intent = Intent(this@SignIn_Activity, Forgot_Activity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    fun signInHere(view: View?) {
+        bar!!.visibility = View.VISIBLE
+        val email = t1!!.editText!!.text.toString().trim { it <= ' ' }
+        val password = t2!!.editText!!.text.toString().trim { it <= ' ' }
+        if (email.isEmpty()) {
+            bar!!.visibility = View.INVISIBLE
+            t1!!.error = "Enter an email address"
+            t1!!.requestFocus()
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            bar!!.visibility = View.INVISIBLE
+            t1!!.error = "Enter a valid email address"
+            t1!!.requestFocus()
+            return
         }
         if (password.isEmpty()) {
-            bar.setVisibility(View.INVISIBLE);
-            t2.setError("Enter a password");
-            t2.requestFocus();
-            return;
+            bar!!.visibility = View.INVISIBLE
+            t2!!.error = "Enter a password"
+            t2!!.requestFocus()
+            return
         }
-
-
-
-        mAuth.signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(SignIn_Activity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            t1.getEditText().setText("");
-                            t2.getEditText().setText("");
-                            bar.setVisibility(View.INVISIBLE);
-                            t1.clearFocus();
-                            t2.clearFocus();
-                            t1.setError("");
-                            t2.setError("");
-                            Intent intent = new Intent(SignIn_Activity.this,DashBoard.class);
-                            intent.putExtra("email",mAuth.getCurrentUser().getEmail());
-                            intent.putExtra("Uid",mAuth.getCurrentUser().getUid());
-                            startActivity(intent);
-                        }
-                        else
-                        {   t1.clearFocus();
-                            t2.clearFocus();
-                            t1.setError("");
-                            t2.setError("");
-                            bar.setVisibility(View.INVISIBLE);
-                            t1.getEditText().setText("");
-                            t2.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), "Invalid Email/Password", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        mAuth!!.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this@SignIn_Activity) { task ->
+                if (task.isSuccessful) {
+                    t1!!.editText!!.setText("")
+                    t2!!.editText!!.setText("")
+                    bar!!.visibility = View.INVISIBLE
+                    t1!!.clearFocus()
+                    t2!!.clearFocus()
+                    t1!!.error = ""
+                    t2!!.error = ""
+                    val intent = Intent(this@SignIn_Activity, DashBoard::class.java)
+                    intent.putExtra("email", mAuth!!.currentUser!!.email)
+                    intent.putExtra("Uid", mAuth!!.currentUser!!.uid)
+                    startActivity(intent)
+                } else {
+                    t1!!.clearFocus()
+                    t2!!.clearFocus()
+                    t1!!.error = ""
+                    t2!!.error = ""
+                    bar!!.visibility = View.INVISIBLE
+                    t1!!.editText!!.setText("")
+                    t2!!.editText!!.setText("")
+                    Toast.makeText(applicationContext, "Invalid Email/Password", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
     }
 
-    private void googleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+    private fun googleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    @SuppressWarnings("deprecation")
-    private void processLogin() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent,101);
+    private fun processLogin() {
+        val signInIntent = mGoogleSignInClient!!.signInIntent
+        startActivityForResult(signInIntent, 101)
     }
 
-    @Override
-        public void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode ==  101) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-          try{
-              GoogleSignInAccount account = task.getResult(ApiException.class);
-              firebaseAuthWithGoogle(account.getIdToken());
-
-          }catch (ApiException e){
-              Toast.makeText(getApplicationContext(), "Error in getting information", Toast.LENGTH_SHORT).show();
-          }
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account.idToken)
+            } catch (e: ApiException) {
+                Toast.makeText(
+                    applicationContext,
+                    "Error in getting information",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(getApplicationContext(),DashBoard.class));
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error in firebase login", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    private fun firebaseAuthWithGoogle(idToken: String?) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        mAuth!!.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = mAuth!!.currentUser
+                    startActivity(Intent(applicationContext, DashBoard::class.java))
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "Error in firebase login",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
     }
-
-
 }
