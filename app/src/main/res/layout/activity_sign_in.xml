@@ -25,11 +25,16 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            app:boxCornerRadiusBottomEnd="35dp"
+            app:boxCornerRadiusBottomStart="35dp"
+            app:boxCornerRadiusTopEnd="35dp"
+            app:boxCornerRadiusTopStart="35dp"
             android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
+                android:layout_marginBottom="15dp"
+
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress">
 
@@ -42,6 +47,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
+            app:boxCornerRadiusBottomEnd="35dp"
+            app:boxCornerRadiusBottomStart="35dp"
+            app:boxCornerRadiusTopEnd="35dp"
+            app:boxCornerRadiusTopStart="35dp"
             android:hint="Password"
             app:passwordToggleEnabled="true">
 
@@ -61,18 +70,29 @@
             android:layout_marginBottom="10dp"
             android:text="Forgot Password"
             android:textSize="20sp">
-
         </TextView>
 
-
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButtonStyle"
             android:id="@+id/signInBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cornerRadius="45dp"
             android:onClick="signInHere"
             android:text="Sign In"
-            android:textSize="20sp">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:textSize="20sp"
+            >
+        </com.google.android.material.button.MaterialButton>
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/signInBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/orange"-->
+
+<!--            android:onClick="signInHere"-->
+<!--            android:text="Sign In"-->
+<!--            android:textSize="20sp">-->
+<!--        </androidx.appcompat.widget.AppCompatButton>-->
     </LinearLayout>
 
 
